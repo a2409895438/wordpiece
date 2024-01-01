@@ -1,32 +1,33 @@
 #include <unordered_map>
 #include <string>
 #include <vector>
+#include <codecvt>
 
 namespace wordpiece{
+    const int WHITESPACE_UNICODE=32;
+
     class WordpieceTokenizer
     {
     public:
-        std::unordered_map<std::string, int> vocab_;
         std::string unk_token_;
-        int max_input_chars_per_word_;
+        int max_seq_length_;
+        std::unordered_map<std::string, int>& vocab_;
 
-        WordpieceTokenizer() {};
 
-        WordpieceTokenizer(const char *vocab_file, std::string unk_token = "[UNK]", int max_input_chars_per_word = 100)
+        WordpieceTokenizer(std::string unk_token, int max_seq_length, std::unordered_map<std::string, int>& vocab): vocab_(vocab)
         {
             unk_token_ = unk_token;
-            max_input_chars_per_word_ = max_input_chars_per_word;
+            max_seq_length_ = max_seq_length;
         }
 
         std::vector<std::string> read_vocab(std::string path);
 
-        std::string tokenize(std::string text);
-
         void
-        encode(std::string text, std::vector<float> &input_ids, std::vector<float> &input_mask, std::vector<float> &segment_ids,
-            int max_seq_length = 512, const char *truncation_strategy = "longest_first");
-    };
+        encode(std::string text, std::vector<float> &input_ids, std::vector<float> &input_mask, std::vector<float> &segment_ids);
 
-    std::vector<std::string> tokenize(std::string text);
+        std::vector<std::string> tokenize(std::string& text);
+
+        void token_split(std::vector<std::string>& output_tokens,std::wstring_convert<std::codecvt_utf8<wchar_t>>& conv,std::wstring& nws);
+    };
 }
 

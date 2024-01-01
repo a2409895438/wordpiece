@@ -26,17 +26,24 @@ std::vector<std::string> TokenizerUtils::splitStringByUtf8Char(std::string& inpu
     return result;  
 }  
 
-bool TokenizerUtils::is_chinese_char(std::string& word)
+
+bool TokenizerUtils::_is_chinese_char(wchar_t cp)
 {
-     if (str.size() % 3 != 0) {  
-        return false; // 非3的倍数，不是UTF-8编码的中文  
-    }  
-  
-    for (char c : str) {  
-        uint8_t high = (uint8_t)(c >> 4); // 取高位4位  
-        if (high >= 0xE0 && high <= 0xEF) { // 检查是否为中文的UTF-8编码范围  
-            return true;  
-        }  
-    }  
-    return false; // 没有找到中文字符
+    if (
+        (cp >= 0x4E00 && cp <= 0x9FFF)
+        || (cp >= 0x3400 && cp <= 0x4DBF)
+        || (cp >= 0x20000 && cp <= 0x2A6DF)
+        || (cp >= 0x2A700 && cp <= 0x2B73F)
+        || (cp >= 0x2B740 && cp <= 0x2B81F)
+        || (cp >= 0x2B820 && cp <= 0x2CEAF)
+        || (cp >= 0xF900 && cp <= 0xFAFF)
+        || (cp >= 0x2F800 && cp <= 0x2FA1F) || cp == 0x3002 || cp == 0xFF1F || cp == 0xFF01 || cp == 0xFF0C ||
+        cp == 0x3001 || cp == 0xFF1B || cp == 0xFF1A || cp == 0x300C || cp == 0x300D || cp == 0x300E ||
+        cp == 0x300F || cp == 0x2018 || cp == 0x2019 || cp == 0x201C || cp == 0x201D || cp == 0xFF08 ||
+        cp == 0xFF09 || cp == 0x3014 || cp == 0x3015 || cp == 0x3010 || cp == 0x3011 || cp == 0x2014 ||
+        cp == 0x2026 || cp == 0x2013 || cp == 0xFF0E || cp == 0x300A || cp == 0x300B || cp == 0x3008 || cp == 0x3009
+        )
+        return true;
+    else
+        return false;
 }

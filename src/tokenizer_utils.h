@@ -3,5 +3,5 @@
 
 namespace TokenizerUtils {
 std::vector<std::string> splitStringByUtf8Char(std::string& input);
-bool is_chinese_char(std::string& word)
+bool _is_chinese_char(wchar_t cp);
 }
